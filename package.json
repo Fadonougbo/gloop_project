@@ -1,0 +1,42 @@
+{
+  "name": "pern_tuto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --watch -p tsconfig.json",
+    "start": "nodemon -r dotenv/config dist/public/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cookie": "^9.1.0",
+    "@fastify/flash": "^5.1.0",
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/postgres": "^5.2.0",
+    "@fastify/static": "^6.11.2",
+    "@fastify/view": "^8.2.0",
+    "@tanstack/react-router": "0.0.1-beta.194",
+    "@vitejs/plugin-react": "^4.1.0",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.23.2",
+    "pg": "^8.11.3",
+    "vite": "^4.4.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.4",
+    "@types/pg": "^8.10.9",
+    "@types/react": "^18.2.28",
+    "@types/react-dom": "^18.2.13",
+    "nodemon": "^3.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0",
+    "sass": "^1.69.3",
+    "typescript": "^5.2.2",
+    "zustand": "^4.4.3"
+  }
+}
