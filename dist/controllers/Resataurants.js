@@ -1,11 +1,17 @@
 import { DB } from "../class/DB.js";
+import { z } from 'zod';
 export class Restaurants {
     fastify;
     db;
+    shemas;
     constructor(fastify) {
         this.fastify = fastify;
         this.db = new DB(this.fastify);
-        this.successResponse = this.successResponse.bind(this);
+        this.shemas = z.object({
+            name: z.string(),
+            location: z.string(),
+            price_rang: z.string().or(z.number())
+        });
         this.restaurants = this.restaurants.bind(this);
         this.restaurant = this.restaurant.bind(this);
         this.postRestaurant = this.postRestaurant.bind(this);
@@ -27,27 +33,48 @@ export class Restaurants {
         return res.status(status).send(response);
     }
     async postRestaurant(req, res) {
-        const { location, name, price_rang } = req.body;
+        const body = req.body;
+        const shemas = this.shemas.required();
+        const parseResponse = shemas.safeParse(body);
+        const message = "Element non enregistré";
+        /**
+         * Affiche une message en cas d'erreur de validation
+         */
+        if (!parseResponse.success) {
+            const errorsMessage = parseResponse.error.formErrors.fieldErrors;
+            return { message, ...errorsMessage };
+        }
+        const { location, name, price_rang } = body;
         const data = await this.db.getData("INSERT INTO restaurants(name,location,price_rang) VALUES ($1,$2,$3) ", [name, location, price_rang]);
         let status = 200;
-        const response = this.getResponse(data, "Element non enregistré", [req.body]);
+        const response = this.getResponse(data, message, [body]);
         return res.status(status).send(response);
     }
     async putRestaurant(req, res) {
-        const valideKey = ["location", "name", "price_rang"];
         const body = req.body;
+        const shemas = this.shemas.partial();
+        const parseResponse = shemas.safeParse(body);
+        const message = "Element non modifié";
+        /**
+         * Affiche une message en cas d'erreur de validation
+         */
+        if (!parseResponse.success) /**
+        Affiche une message en cas d'erreur de validation */ {
+            const errorsMessage = parseResponse.error.formErrors.fieldErrors;
+            return { message, ...errorsMessage };
+        }
         const id = req.params.id;
         let setRequest = [];
         let values = [];
         let i = 1;
-        for (const [key, value] of Object.entries(body)) {
-            const element = valideKey.find((el) => el === key);
-            if (element) {
-                const p = `$${i}`;
-                setRequest.push(`${key}=${p}`);
-                values.push(value);
-                i++;
-            }
+        for (const [key, value] of Object.entries(parseResponse.data)) {
+            const p = `$${i}`;
+            setRequest.push(`${key}=${p}`);
+            values.push(value);
+            i++;
+        }
+        if (setRequest.length === 0) {
+            return { message: 'Aucune donnée entré pour des modifications' };
         }
         const joinSetRequest = setRequest.join(',');
         const data = await this.db.getData(`UPDATE restaurants SET ${joinSetRequest} WHERE id=$${i} `, [...values, id]);
@@ -61,6 +88,10 @@ export class Restaurants {
         const response = this.getResponse(data, "Element non supprimé");
         return res.status(status).send(response);
     }
+    /**
+     * Gere les erreurs lié a la base de donnees si il y en n'a
+     *
+     */
     getResponse(data, message, bodyData) {
         let response = {};
         if ((data === undefined) || (data.rowCount === 0)) {
@@ -76,21 +107,6 @@ export class Restaurants {
                 data: bodyData ?? (data?.rows)
             };
         }
-        return response;
-    }
-    successResponse(data, element) {
-        const response = {
-            status: "sucess",
-            totalElement: data.rowCount,
-            data: element ?? data?.rows
-        };
-        return response;
-    }
-    errorResponse(message) {
-        const response = {
-            status: "error",
-            message: message
-        };
         return response;
     }
 }

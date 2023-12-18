@@ -1,6 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import { DB } from "../class/DB.js"
 import { QueryResult } from "pg"
+import {z} from 'zod'
 
 type BodyDataType={
     name:string,
@@ -19,11 +20,18 @@ export class Restaurants {
 
     private fastify:FastifyInstance
     private db:DB;
+    private shemas;
+    
     constructor(fastify:FastifyInstance) {
         this.fastify=fastify;
         this.db=new DB(this.fastify);
 
-        this.successResponse=this.successResponse.bind(this);
+        this.shemas=z.object({
+            name:z.string(),
+            location:z.string(),
+            price_rang:z.string().or(z.number())
+        })
+
         this.restaurants=this.restaurants.bind(this);
         this.restaurant=this.restaurant.bind(this);
         this.postRestaurant=this.postRestaurant.bind(this);
@@ -55,45 +63,74 @@ export class Restaurants {
 
    async  postRestaurant(req:FastifyRequestWithParams,res:FastifyReply){
     
-        const {location,name,price_rang}=req.body
-        const data=await this.db.getData("INSERT INTO restaurants(name,location,price_rang) VALUES ($1,$2,$3) ",[name,location,price_rang]);
-        let status=200
 
-        const response=this.getResponse(data,"Element non enregistré",[req.body])
+        const body=req.body
+
+        const shemas=this.shemas.required()
+
+        const parseResponse=shemas.safeParse(body)
+
+        const message="Element non enregistré";
+        /**
+         * Affiche une message en cas d'erreur de validation
+         */
+        if(!parseResponse.success) {
+            const errorsMessage=parseResponse.error.formErrors.fieldErrors;
+            return {message,...errorsMessage}
+        }
+
+        const {location,name,price_rang}=body
+        const data=await this.db.getData("INSERT INTO restaurants(name,location,price_rang) VALUES ($1,$2,$3) ",[name,location,price_rang]);
+
+        let status=200
+        const response=this.getResponse(data,message,[body])
         
         return res.status(status).send(response);
     }
 
    async  putRestaurant(req:FastifyRequestWithParams,res:FastifyReply){
         
-        const valideKey=["location","name","price_rang"];
+
         const body=req.body;
+        const shemas=this.shemas.partial()
+
+        const parseResponse=shemas.safeParse(body);
+
+        const message="Element non modifié";
+        /**
+         * Affiche une message en cas d'erreur de validation
+         */
+        if(!parseResponse.success)      /**
+        Affiche une message en cas d'erreur de validation */ {
+            const errorsMessage=parseResponse.error.formErrors.fieldErrors;
+            return {message,...errorsMessage}
+        }
+
         const id=req.params.id
         
         let setRequest=[];
         let values=[];
        
-       let i=1;
-       for (const [key,value] of Object.entries(body)) {
+        let i=1;
+        for (const [key,value] of Object.entries(parseResponse.data)) {
+            const p=`$${i}`;
+            setRequest.push(`${key}=${p}`);
+            values.push(value)
+            i++
+        }
+
+        if(setRequest.length===0) {
+            return {message:'Aucune donnée entré pour des modifications'}
+        }
+
         
-            const element =valideKey.find((el)=>el===key)
-            if(element) {
-                const p=`$${i}`;
-                setRequest.push(`${key}=${p}`);
-                values.push(value)
-                i++
-             }
-
-       }
-
         const joinSetRequest=setRequest.join(',')
-
         const data=await this.db.getData(`UPDATE restaurants SET ${joinSetRequest} WHERE id=$${i} `,[...values,id]);
-        let status=200
 
+        let status=200
         const response=this.getResponse(data,"Element non modifié")
         
-        return res.status(status).send(response);
+        return  res.status(status).send(response);
     }
 
     async deleteRestaurant(req:FastifyRequestWithParams,res:FastifyReply){
@@ -106,6 +143,10 @@ export class Restaurants {
         return res.status(status).send(response);
     }
 
+    /**
+     * Gere les erreurs lié a la base de donnees si il y en n'a 
+     *
+     */
     private getResponse(data:QueryResult<any>|undefined,message:string,bodyData?:BodyDataType[]) {
         let response={};
 
@@ -125,26 +166,5 @@ export class Restaurants {
          return response
     }
 
-    private successResponse(data:QueryResult<any>,element?:BodyDataType[]) {
-        
-        const response={
-            status:"sucess",
-            totalElement:data.rowCount,
-            data:element??data?.rows
-        }
-        
-        return response
-    }
 
-    private errorResponse(message:string) {
-
-
-        const response={
-            status:"error",
-            message:message
-        }
-
-        return response;
-
-    }
 }

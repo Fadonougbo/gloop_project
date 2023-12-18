@@ -4,6 +4,18 @@ import { pluginRegister } from './pluginRegister.js';
 const server = Fastify();
 const fastify = pluginRegister(server);
 const newRestaurants = new Restaurants(fastify);
+/*  fastify.get('/essai',async (req:FastifyRequest,res:FastifyReply)=> {
+
+  const token = await res.generateCsrf()
+  return { token }
+})
+ 
+
+fastify.post('/essai',async (req:FastifyRequest,res:FastifyReply)=> {
+
+  console.log(req.cookies);
+  return  req.body
+}) */
 // Get all restaurants
 fastify.get('/api/v1/restaurants', newRestaurants.restaurants);
 //Get one restaurant
