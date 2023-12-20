@@ -51,10 +51,12 @@ try {
   fastify.listen({ port: port })
 
 } catch (err) {
+
   fastify.log.error(err)
 
   if(err instanceof Error) {
     console.log(err.message);
   }
   process.exit(1)
+  
 }

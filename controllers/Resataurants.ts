@@ -43,7 +43,7 @@ export class Restaurants {
     public async  restaurants(req:FastifyRequest,res:FastifyReply){
 
         const data=await this.db.getData("SELECT * FROM restaurants");
-        let status=200
+        let status=200;
          
         const response=this.getResponse(data,"Aucun element n'a été trouvé")
         return res.status(status).send(response);
