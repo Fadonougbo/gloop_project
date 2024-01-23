@@ -8,7 +8,7 @@ export const Home=()=> {
     return(
         <>
             <div id="page_head" >
-                <h1>Restaurant finder</h1>
+                <h1>Gloop</h1>
             </div>
             <form action="">
                 <section>
