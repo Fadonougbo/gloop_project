@@ -8,5 +8,5 @@
     "strict": true,
   },
   "include":["public","controllers","class"],
-  "except":["node_modules"]
+  "except":["node_modules","dist"]
 }

@@ -30,7 +30,7 @@ fastify.delete('/api/v1/restaurant/:id', newRestaurants.deleteRestaurant);
 try {
     const PORT = process.env.PORT;
     const port = PORT ? parseInt(PORT) : 8000;
-    fastify.listen({ port: port });
+    fastify.listen({ port });
 }
 catch (err) {
     fastify.log.error(err);

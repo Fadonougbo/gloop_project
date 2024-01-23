@@ -1,0 +1,53 @@
+@use '../config';
+
+#page_head {
+
+    width: 100%;
+    margin: 1rem;
+    padding: 1rem;
+
+    h1 {
+        font-size: 3rem;
+        text-align: center;
+    }
+}
+
+form {
+
+    width: 100%;
+    display: flex;
+
+    section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .input_container {
+        border:solid 2px green;
+        width: 28%;
+        margin: 0.6rem;
+    }
+
+    .input_container input {
+        width: 100%;
+        height: 2rem;
+        
+    }
+
+    #button_container {
+        border:solid 2px green;
+        flex-grow: 0.5;
+        margin: 0.6rem;
+    }
+
+    #button_container button {
+        width: 100%;
+        height: 100%;
+        border:none;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+
+}

@@ -21,6 +21,7 @@ const router=createBrowserRouter([
     {
         path:"/show/:id",
         element:<Show/>
+
     },
     {
         path:'/update/:id',

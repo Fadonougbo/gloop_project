@@ -38,7 +38,7 @@ export class Restaurants {
         const parseResponse = shemas.safeParse(body);
         const message = "Element non enregistré";
         /**
-         * Affiche une message en cas d'erreur de validation
+         * Affiche un message en cas d'erreur de validation
          */
         if (!parseResponse.success) {
             const errorsMessage = parseResponse.error.formErrors.fieldErrors;

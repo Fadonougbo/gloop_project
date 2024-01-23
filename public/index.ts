@@ -1,5 +1,4 @@
 import Fastify from 'fastify'
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { Restaurants } from '../controllers/Resataurants.js'
 import { pluginRegister } from './pluginRegister.js'
 
@@ -48,7 +47,7 @@ try {
   const PORT=process.env.PORT
   const port=PORT?parseInt(PORT):8000;
 
-  fastify.listen({ port: port })
+  fastify.listen({ port })
 
 } catch (err) {
 
