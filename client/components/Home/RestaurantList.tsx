@@ -1,69 +1,40 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { FilePenLine, Trash2 } from 'lucide-react';
 import ky from 'ky'
+import { Table } from "./Table";
 
-const kyCreate=ky.create({prefixUrl:'http://localhost:8000/api/v1/restaurants'})
+export type RestaurantDataType={
+    id:string,
+    name:string,
+    location:string,
+    price_rang:string
+}
+
+export type DataType={
+    data:RestaurantDataType[],
+    status:string,
+    totalElement:number
+
+}
 
 
 export const RestaurantList=()=> {
 
+    const [isLoading,setIsLoading]=useState(true)
+
+
     useEffect(()=> {
 
-        kyCreate.get('')
-        .then(data=>console.log(data))
-
-
+        setIsLoading(false);
 
     },[])
 
+
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Restaurant</th>
-                    <th>Location</th>
-                    <th>Ratings</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Delice</td>
-                    <td>Cotonou</td>
-                    <td>****</td>
-                    <td className="action" ><FilePenLine color='#102706' size={40} /> </td>
-                    <td className="action" ><Trash2 color='#ac4a3a' size={40} /> </td>
-                </tr>
-                <tr>
-                    <td>Delice</td>
-                    <td>Cotonou</td>
-                    <td>****</td>
-                    <td>edit</td>
-                    <td>delete</td>
-                </tr>
-                <tr>
-                    <td>Delice</td>
-                    <td>Cotonou</td>
-                    <td>****</td>
-                    <td>edit</td>
-                    <td>delete</td>
-                </tr>
-                <tr>
-                    <td>Delice</td>
-                    <td>Cotonou</td>
-                    <td>****</td>
-                    <td>edit</td>
-                    <td>delete</td>
-                </tr>
-                <tr>
-                    <td>Delice</td>
-                    <td>Cotonou</td>
-                    <td>****</td>
-                    <td>edit</td>
-                    <td>delete</td>
-                </tr>
-            </tbody>
-        </table>
+        <>
+        {
+            !isLoading?<Table/>:'chargement'
+        }
+    </>
     )
 }
