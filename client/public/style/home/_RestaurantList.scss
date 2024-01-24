@@ -1,0 +1,53 @@
+
+
+
+table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+
+    thead{
+        background-color: var(--basic_site_color);
+        
+    }
+
+    tbody {
+        //backdrop-filter: blur(5px);
+        background: rgba($color: #fff, $alpha: 0.6);
+        color: rgba($color: #000000, $alpha: 0.8);
+    }
+
+    th,td {
+        text-align: center;
+    }
+
+    th {
+        font-size: 1.6rem;
+        color: var(--basic_site_color2);
+        padding: 0.5rem;
+    }
+
+    td {
+        font-size: 1.4rem;
+        padding: 0.4rem;
+    }
+
+    tr .action {
+        cursor: pointer;
+        color: #1bae1b;
+        //background-color: #c20f0f;
+    }
+
+   /*  tr button {
+        width: 3rem;
+        height: 3rem;
+    
+    } */
+
+   /*  tr image {
+        width: 2rem;
+        height: 100%;
+    } */
+
+
+}

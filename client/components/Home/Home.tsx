@@ -1,5 +1,6 @@
 import React from "react"
 import '../../public/style/home/home.scss';
+import { RestaurantList } from "./RestaurantList";
 
 export const Home=()=> {
 
@@ -26,6 +27,7 @@ export const Home=()=> {
                     </div>
                 </section>
             </form>
+            <RestaurantList/>
         </>
     )
 }
