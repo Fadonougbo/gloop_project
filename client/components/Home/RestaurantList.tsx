@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { FilePenLine, Trash2 } from 'lucide-react';
-import ky from 'ky'
 import { Table } from "./Table";
 
 export type RestaurantDataType={

@@ -5,13 +5,6 @@ import  {RouterProvider, createBrowserRouter} from 'react-router-dom'
 import { Show } from './Show/Show'
 import { Update } from './Update/Update'
 
-/* const App=()=>{
-
-    return (
-        <Home/>
-    )
-
-} */
 
 const router=createBrowserRouter([
     {

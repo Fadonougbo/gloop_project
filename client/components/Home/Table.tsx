@@ -19,8 +19,7 @@ export const Table=()=> {
 
     useEffect(()=> {
 
-        const data=getData()
-        .then((res)=>{
+        getData().then((res)=>{
             setState(()=>res.data) 
         })
 
