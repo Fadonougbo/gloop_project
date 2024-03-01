@@ -9,7 +9,7 @@ const newRestaurants = new Restaurants(fastify);
   const token = await res.generateCsrf()
   return { token }
 })
- 
+  
 
 fastify.post('/essai',async (req:FastifyRequest,res:FastifyReply)=> {
 
@@ -29,7 +29,7 @@ fastify.delete('/api/v1/restaurant/:id', newRestaurants.deleteRestaurant);
 // Run the server! 
 try {
     const PORT = process.env.PORT;
-    const port = PORT ? parseInt(PORT) : 8000;
+    const port = PORT ? parseInt(PORT) : 8001;
     fastify.listen({ port });
 }
 catch (err) {

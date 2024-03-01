@@ -3,7 +3,6 @@ import { FilePenLine, Star, Trash2 } from 'lucide-react';
 import type { RestaurantDataType } from "./RestaurantList";
 
 
-
 export const TableRow=({location,name,price_rang}:RestaurantDataType)=> {
 
     const parsePriceRange=parseInt(price_rang)

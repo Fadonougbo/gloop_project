@@ -80,12 +80,13 @@ export class Restaurants {
         }
 
         const {location,name,price_rang}=body
-        const data=await this.db.getData("INSERT INTO restaurants(name,location,price_rang) VALUES ($1,$2,$3) ",[name,location,price_rang]);
+        const data:QueryResult<any>|undefined=await this.db.getData("INSERT INTO restaurants (name,location,price_rang) VALUES ($1,$2,$3) RETURNING id ",[name,location,price_rang]);
 
-        let status=200
-        const response=this.getResponse(data,message,[body])
-        
-        return res.status(status).send(response);
+        const mergeData={...body,lastID:data?.rows[0]};
+
+        let status=200 
+        const response=this.getResponse(data,message,[mergeData])
+        return  res.status(status).send(response);
     }
 
    async  putRestaurant(req:FastifyRequestWithParams,res:FastifyReply){
@@ -148,8 +149,9 @@ export class Restaurants {
      *
      */
     private getResponse(data:QueryResult<any>|undefined,message:string,bodyData?:BodyDataType[]) {
+        
         let response={};
-
+      
         if((data===undefined)||(data.rowCount===0)) {
              response={
                 status:"error",

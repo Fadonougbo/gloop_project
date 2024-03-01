@@ -13,6 +13,7 @@ export class DB {
         const client=await this.fastify.pg.connect()
         try {
             const data= await client.query(query,params);
+            
             return data
         }catch(e) {
             console.log(e);

@@ -45,9 +45,10 @@ export class Restaurants {
             return { message, ...errorsMessage };
         }
         const { location, name, price_rang } = body;
-        const data = await this.db.getData("INSERT INTO restaurants(name,location,price_rang) VALUES ($1,$2,$3) ", [name, location, price_rang]);
+        const data = await this.db.getData("INSERT INTO restaurants (name,location,price_rang) VALUES ($1,$2,$3) RETURNING id ", [name, location, price_rang]);
+        const mergeData = { ...body, lastID: data?.rows[0] };
         let status = 200;
-        const response = this.getResponse(data, message, [body]);
+        const response = this.getResponse(data, message, [mergeData]);
         return res.status(status).send(response);
     }
     async putRestaurant(req, res) {

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"
-import ky from 'ky'
-import type { DataType, RestaurantDataType } from "./RestaurantList";
+import React, { useEffect } from "react"
+import type { DataType } from "./RestaurantList";
 import { TableRow } from "./TableRow";
+import { kyCreate } from "./Home";
+import { useStore } from "../../store/store";
 
 
-const kyCreate=ky.create({prefixUrl:'http://localhost:8000/api/v1'})
+
 
 const getData=async ()=> {
     const data=await kyCreate.get('restaurants').json<DataType>()
@@ -14,19 +15,21 @@ const getData=async ()=> {
 
 export const Table=()=> {
 
-    const [state,setState]=useState<RestaurantDataType[]>([])
+    const apiData=useStore((state)=>state.apiData)
+
+    const setApiData=useStore((state)=>state.setApiType)
 
 
     useEffect(()=> {
 
         getData().then((res)=>{
-            setState(()=>res.data) 
+            setApiData(res.data) 
         })
 
     },[])
 
 
-    const tableRows=state.map((data)=> {
+    const tableRows=apiData.map((data)=> {
         return <TableRow {...data} key={data.id} />
     })
 

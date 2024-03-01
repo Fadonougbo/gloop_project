@@ -3,8 +3,22 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from "react-hook-form";
 import {z} from 'zod'
+import { kyCreate } from "./Home";
 
-
+type ResponseType={
+    status:string,
+    totalElement:number,
+    data:[
+        {
+            name:string,
+            location:string,
+            price_rang:string
+            lastID:{
+                id:string
+            }
+        }
+    ]
+}
 
 export const RestaurantForm=()=> {
 
@@ -17,36 +31,22 @@ export const RestaurantForm=()=> {
 
     type FormDataType=z.infer<typeof shemas>
 
-    const {handleSubmit,register,watch,formState:{errors,touchedFields}}=useForm<FormDataType>({
+    const {handleSubmit,register,formState:{errors}}=useForm<FormDataType>({
         mode:'onTouched',
         resolver:zodResolver(shemas)
-    }) 
+    })   
 
-    console.log('x',touchedFields)
+    const handleFormSubmit:SubmitHandler<FormDataType>=async (data)=> {
 
-    const handleFormSubmit:SubmitHandler<FormDataType>=(e)=> {
-
-       console.log(e)
-
-       /*  const form=e.currentTarget as HTMLFormElement 
-
-        const formdata=new FormData(form)
-        const data=Object.fromEntries(formdata)
+        const response=await kyCreate.post('restaurant',{
+          json:data
+        }).json<ResponseType>();
         
-        const schemas=z.object({
-            name:z.string(),
-            location:z.string(),
-            price_rang:z.coerce.number().min(1).max(5)
-        })
-
-        const res=schemas.safeParse({name:'doe',location:'ok',price_rang:-1})
-        console.log(res); */
-       
+        const {name,lastID:{id},location,price_rang}=response.data[0]
+        
+        const formateData={name,location,price_rang,id:parseInt(id)}
         
     }
-
-    /* console.log('watch',watch())
-    console.log('errors',errors) */
    
 
 
@@ -57,22 +57,25 @@ export const RestaurantForm=()=> {
                         <input type="text" 
                                placeholder="name" 
                                {...register('name')} 
+                               className={errors?.name&&'bad_value'}
                         />
-                        {errors?.name&&<p>{errors?.name?.message}</p>}
+                        {errors?.name&&<p className="error_message" >{errors?.name?.message}</p>}
                     </div>
                     <div className="input_container" >
                         <input type="text" 
                                {...register('location')} 
-                               placeholder="location"  
+                               placeholder="location"
+                               className={errors?.location&&'bad_value'}  
                          />
-                        {errors.location&&<p>{errors.location.message}</p>}
+                        {errors.location&&<p className="error_message" >{errors.location.message}</p>}
                     </div>
                     <div className="input_container" >
                         <input  type="number" 
                                 {...register('price_rang')} 
-                                placeholder="rang"  
+                                placeholder="rang"
+                                className={errors?.price_rang&&'bad_value'}  
                         />
-                        {errors?.price_rang&&<p>{errors?.price_rang?.message}</p>}
+                        {errors?.price_rang&&<p className="error_message" >{errors?.price_rang?.message}</p>}
                     </div>
                     <div id="button_container" >
                         <button>Add</button>
