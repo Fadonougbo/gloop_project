@@ -1,4 +1,4 @@
-import React from "react"
+import React, { FormEvent } from "react"
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from "react-hook-form";
@@ -6,7 +6,8 @@ import {z} from 'zod'
 import { kyCreate } from "./Home";
 import { useStore } from "../../store/store";
 
-type ResponseType={
+/* Type de la reponse reçu en cas d'une requete post */
+export type ResponseType={
     status:string,
     totalElement:number,
     data:[
@@ -32,14 +33,14 @@ export const RestaurantForm=()=> {
 
     type FormDataType=z.infer<typeof shemas>
 
-    const {handleSubmit,register,formState:{errors}}=useForm<FormDataType>({
+    const {handleSubmit,register,reset,formState:{errors}}=useForm<FormDataType>({
         mode:'onTouched',
         resolver:zodResolver(shemas)
     })   
 
     const addApiData=useStore((state)=>state.addApiData)
 
-    const handleFormSubmit:SubmitHandler<FormDataType>=async (data)=> {
+    const handleFormSubmit:SubmitHandler<FormDataType>=async (data,e)=> {
 
          
         const response=await kyCreate.post('restaurant',{
@@ -50,7 +51,13 @@ export const RestaurantForm=()=> {
         
         const formateData={name,location,price_rang,id};
 
-        addApiData(formateData)
+        /* Ajoute le nouvel element a la vue */
+
+        if(response.status==='sucess') {
+            addApiData(formateData)
+            reset()
+        }
+        
         
     }
    

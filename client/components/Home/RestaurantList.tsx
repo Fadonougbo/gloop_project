@@ -8,6 +8,7 @@ export type RestaurantDataType={
     price_rang:string
 }
 
+/* Type de l'element issu d'un GET */
 export type DataType={
     data:RestaurantDataType[],
     status:string,

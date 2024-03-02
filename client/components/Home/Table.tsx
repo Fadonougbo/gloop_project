@@ -4,7 +4,7 @@ import { TableRow } from "./TableRow";
 import { kyCreate } from "./Home";
 import { useStore } from "../../store/store";
 
-
+/* Recupere la liste des restaurants */
 const getData=async ()=> {
     const data=await kyCreate.get('restaurants').json<DataType>()
       return data;
@@ -17,7 +17,6 @@ export const Table=()=> {
 
     const setApiData=useStore((state)=>state.setApiType)
 
-
     useEffect(()=> {
 
         getData().then((res)=>{
@@ -27,9 +26,10 @@ export const Table=()=> {
     },[])
 
 
-    const tableRows=apiData.map((data)=> {
+    const tableRows=apiData?.map((data)=> {
         return <TableRow {...data} key={data.id} />
     })
+
 
 
     return (

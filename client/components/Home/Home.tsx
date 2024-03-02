@@ -6,7 +6,7 @@ import ky from "ky";
 import { useStore } from "../../store/store";
 import { Modale } from "./Modale";
 
-
+/* Prefixe de base pour les api */
 export const kyCreate=ky.create({prefixUrl:'http://localhost:8001/api/v1'})
 
 export const Home=()=> {
