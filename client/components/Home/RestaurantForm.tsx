@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from "react-hook-form";
 import {z} from 'zod'
 import { kyCreate } from "./Home";
+import { useStore } from "../../store/store";
 
 type ResponseType={
     status:string,
@@ -22,7 +23,7 @@ type ResponseType={
 
 export const RestaurantForm=()=> {
 
-
+    /* Shemas de validation des datas */
     const shemas=z.object({
         name:z.string().min(3,{message:'min length 3'}),
         location:z.string().min(1,{message:'min length 1'}),
@@ -36,15 +37,20 @@ export const RestaurantForm=()=> {
         resolver:zodResolver(shemas)
     })   
 
+    const addApiData=useStore((state)=>state.addApiData)
+
     const handleFormSubmit:SubmitHandler<FormDataType>=async (data)=> {
 
+         
         const response=await kyCreate.post('restaurant',{
           json:data
         }).json<ResponseType>();
         
         const {name,lastID:{id},location,price_rang}=response.data[0]
         
-        const formateData={name,location,price_rang,id:parseInt(id)}
+        const formateData={name,location,price_rang,id};
+
+        addApiData(formateData)
         
     }
    

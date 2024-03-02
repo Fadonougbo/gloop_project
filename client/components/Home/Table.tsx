@@ -5,8 +5,6 @@ import { kyCreate } from "./Home";
 import { useStore } from "../../store/store";
 
 
-
-
 const getData=async ()=> {
     const data=await kyCreate.get('restaurants').json<DataType>()
       return data;
@@ -47,13 +45,6 @@ export const Table=()=> {
                     </tr>
                 </thead>
                 <tbody>
-{/*                     <tr>
-                        <td>Delice</td>
-                        <td>Cotonou</td>
-                        <td>****</td>
-                        <td className="action" ><FilePenLine color='#102706' size={40} /> </td>
-                        <td className="action" ><Trash2 color='#ac4a3a' size={40} /> </td>
-                    </tr> */}
                     {
                         tableRows
                     }

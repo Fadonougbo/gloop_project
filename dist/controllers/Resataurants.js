@@ -19,7 +19,7 @@ export class Restaurants {
         this.deleteRestaurant = this.deleteRestaurant.bind(this);
     }
     async restaurants(req, res) {
-        const data = await this.db.getData("SELECT * FROM restaurants");
+        const data = await this.db.getData("SELECT * FROM restaurants ORDER BY id DESC");
         let status = 200;
         const response = this.getResponse(data, "Aucun element n'a été trouvé");
         return res.status(status).send(response);
